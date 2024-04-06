@@ -4,14 +4,14 @@ services:
 
     ionic-ui:
       build:
-        context:                ./src/frontend/dam
+        context:                ./src/frontend/AutomaticIrrigationApp
         dockerfile:             Dockerfile
       ports:
         -                       "8100:8100"
       container_name:           ionic-ui
       volumes:
-         -                      ./src/frontend/dam:/src/frontend/dam
-         -                      /src/frontend/dam/node_modules
+         -                      ./src/frontend/AutomaticIrrigationApp:/src/frontend/AutomaticIrrigationApp
+         -                      /src/frontend/AutomaticIrrigationApp/node_modules
       command:                  ionic serve --external
 
     mysql-server:

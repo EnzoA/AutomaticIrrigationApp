@@ -19,10 +19,10 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `DAM`
+-- Base de datos: `AutomaticIrrigation`
 --
-CREATE DATABASE IF NOT EXISTS `DAM` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `DAM`;
+CREATE DATABASE IF NOT EXISTS `AutomaticIrrigation` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `AutomaticIrrigation`;
 
 -- --------------------------------------------------------
 

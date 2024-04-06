@@ -1,6 +1,6 @@
 FROM node:20
 
-WORKDIR /src/frontend/dam
+WORKDIR /src/frontend/AutomaticIrrigationApp
 
 COPY package*.json ./
 
