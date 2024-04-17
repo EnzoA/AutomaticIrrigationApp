@@ -18,11 +18,6 @@ const corsOptions = {
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 
-const myLogger = function(req, res, next) {
-    console.log('Logged');
-    next();
-}
-
 const authenticator = function(req, res, next) {
     const autHeader = req.headers.authorization || '';
     let token = '';
@@ -39,7 +34,6 @@ const authenticator = function(req, res, next) {
     next();
 }
 
-app.use(myLogger);
 // to parse application/json
 app.use(express.json()); 
 // to serve static files
@@ -59,10 +53,10 @@ app.post('/login', (req, res) => {
     if (req.body) {
         const user = req.body;
 
-        if (testUser.username === req.body.username && testUser.password === req.body.password) {
-            const token = jwt.sign(user, YOUR_SECRET_KEY);
+        if (user && testUser.username === user.username && testUser.password === user.password) {
+            const token = jwt.sign(user.username, YOUR_SECRET_KEY);
             res.status(200).send({
-                signed_user: user,
+                signed_user: user.username,
                 token: token
             });
         } else {
