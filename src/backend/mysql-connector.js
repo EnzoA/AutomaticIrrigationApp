@@ -2,14 +2,15 @@ const mysql = require('mysql');
 
 const configMysql = {
     connectionLimit: 10,
-    host: '192.168.0.45',
+    host: 'mysql-server',
     port: '3306',
     user: 'root',
     password: 'userpass',
-    database: 'DAM'
+    database: 'AutomaticIrrigation',
 };
 
 const pool = mysql.createPool(configMysql);
+console.log('THE POOL IS ', pool);
 
 pool.getConnection((err, connection) => {
     if (err) {

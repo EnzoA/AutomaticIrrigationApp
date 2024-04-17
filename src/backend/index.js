@@ -18,7 +18,7 @@ const corsOptions = {
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 };
 
-const authenticator = function(req, res, next) {
+const authenticator = (req, res, next) => {
     const autHeader = req.headers.authorization || '';
     let token = '';
     if (autHeader.startsWith('Bearer ')) {
@@ -26,11 +26,11 @@ const authenticator = function(req, res, next) {
     } else {
         res.status(401).send({ message: 'Se requiere un token de tipo Bearer'});
     }
-    jwt.verify(token, YOUR_SECRET_KEY, function(err) {
+    jwt.verify(token, YOUR_SECRET_KEY, (err) => {
         if (err) {
             res.status(403).send({ message: 'Token inválido'});
         }
-    })
+    });
     next();
 }
 
@@ -41,13 +41,9 @@ app.use(express.static('/home/node/app/static/'));
 // to enable cors
 app.use(cors(corsOptions));
 
-app.use('/dispositivo', routerDispositivo);
+app.use('/dispositivos', routerDispositivo);
 
 //=======[ Main module code ]==================================================
-
-app.get('/', function(req, res, next) {
-    res.send({ 'mensaje': 'Hola DAM' }).status(200);
-});
 
 app.post('/login', (req, res) => {
     if (req.body) {
@@ -71,7 +67,7 @@ app.post('/login', (req, res) => {
     }
 });
 
-app.get('/user/', function(req, res, next) {
+app.get('/user/', (req, res, next) => {
     pool.query('Select * from Usuarios', function(err, result, fields) {
         if (err) {
             res.send(err).status(400);
@@ -79,10 +75,6 @@ app.get('/user/', function(req, res, next) {
         }
         res.send(result);
     });
-});
-
-app.get('/prueba', authenticator, function(req, res) {
-    res.send({ message: 'Está autenticado, accede a los datos' });
 });
 
 app.listen(PORT, function(req, res) {
