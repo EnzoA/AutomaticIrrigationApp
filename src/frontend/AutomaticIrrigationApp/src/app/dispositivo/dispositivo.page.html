@@ -1,0 +1,19 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-button routerLink="/home">
+                <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+        <ion-title>Dispositivo {{dispositivo?.dispositivoId || '-'}}</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+        <ion-title size="large">Dispositivo</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  {{ dispositivo?.nombre || '-' }}
+</ion-content>

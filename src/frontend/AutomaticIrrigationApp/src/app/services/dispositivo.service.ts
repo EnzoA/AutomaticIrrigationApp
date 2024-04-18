@@ -9,11 +9,13 @@ import { environment } from 'src/environments/environment';
 })
 export class DispositivoService {
 
-  constructor(private _http: HttpClient) { }
+	constructor(private _http: HttpClient) { }
 
-   getDispositivos(): Observable<Dispositivo[]> {
-      return this._http.get(`${environment.apiBaseUrl}/dispositivos`).pipe(
-        map(response => (response as Dispositivo[]))
-      );
-   }
+	getDispositivos(): Observable<Dispositivo[]> {
+		return this._http.get<Dispositivo[]>(`${environment.apiBaseUrl}/dispositivos`);
+	}
+
+	getDispositivo(id: number): Observable<Dispositivo> {
+		return this._http.get<Dispositivo>(`${environment.apiBaseUrl}/dispositivos/${id}`);
+	}
 }
