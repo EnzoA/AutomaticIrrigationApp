@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Dispositivo } from '../models/Dispositivo';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({

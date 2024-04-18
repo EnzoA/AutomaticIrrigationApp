@@ -14,12 +14,33 @@ routerDispositivo.get('/', (req, res) => {
 });
 
 routerDispositivo.get('/:id', (req, res) => {
-    pool.query('Select * From Dispositivos Where dispositivoId = ' + req.params.id + ' Limit 1;', (err, result, fields) => {
+    const getDispositivoQuery = `
+        SELECT
+        d.*,
+        m.valor
+        FROM Dispositivos AS d
+        LEFT JOIN (
+            SELECT m.dispositivoId, m.valor
+            FROM Mediciones AS m
+            WHERE m.dispositivoId = ${req.params.id}
+            ORDER BY m.fecha DESC
+            LIMIT 1
+        ) AS m ON d.dispositivoId = m.dispositivoId
+        WHERE d.dispositivoId = ${req.params.id};
+    `;
+    pool.query(getDispositivoQuery, (err, result, fields) => {
         if (err) {
             res.send(err).status(400);
             return;
         }
-        res.send(result[0]);
+        const dispositivo = result[0];
+        res.send({
+            dispositivoId: dispositivo.dispositivoId,
+            nombre: dispositivo.nombre,
+            ubicacion: dispositivo.ubicacion,
+            electrovalvulaId: dispositivo.electrovalvulaId,
+            ultimaMedicion: dispositivo.valor
+        });
     });
 });
 

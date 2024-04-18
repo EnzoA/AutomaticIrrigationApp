@@ -5,7 +5,7 @@
                 <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
             </ion-button>
         </ion-buttons>
-        <ion-title>Dispositivo {{dispositivo?.dispositivoId || '-'}}</ion-title>
+        <ion-title>{{dispositivo?.nombre || '-'}}</ion-title>
     </ion-toolbar>
 </ion-header>
 
@@ -15,5 +15,14 @@
         <ion-title size="large">Dispositivo</ion-title>
     </ion-toolbar>
   </ion-header>
-  {{ dispositivo?.nombre || '-' }}
+  <div id="highcharts" style="width:100%; height:300px;"></div>
+  <div class="container">
+    <ion-button shape="round" class="dispositivo-button">ABRIR ELECTROVÁLVULA</ion-button>
+  </div>
+  <div class="container">
+    <ion-button shape="round" fill="outline" class="dispositivo-button">VER TODAS LAS MEDICIONES</ion-button>
+  </div>
+  <div class="container">
+    <ion-button shape="round" fill="outline" class="dispositivo-button">VER LOS RIEGOS</ion-button>
+  </div>
 </ion-content>
