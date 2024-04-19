@@ -1,14 +1,15 @@
 //=======[ Settings, Imports & Data ]==========================================
 
 const PORT = 3000;
-
 const cors = require('cors');
-
 const express = require('express');
+
 const app = express();
-const pool = require('./mysql-connector');
+// const pool = require('./mysql-connector');
 const jwt = require('jsonwebtoken');
+
 const routerDispositivo = require('./routes/dispositivo');
+const routerElectrovalvula = require('./routes/electrovalvula');
 
 const YOUR_SECRET_KEY = 'mi llave';
 const testUser = { username: 'test', password: '1234' };
@@ -34,14 +35,11 @@ const authenticator = (req, res, next) => {
     next();
 }
 
-// to parse application/json
 app.use(express.json()); 
-// to serve static files
 app.use(express.static('/home/node/app/static/'));
-// to enable cors
 app.use(cors(corsOptions));
-
 app.use('/dispositivos', routerDispositivo);
+app.use('/electrovalvulas', routerElectrovalvula);
 
 //=======[ Main module code ]==================================================
 
@@ -65,16 +63,6 @@ app.post('/login', (req, res) => {
             errorMessage: 'Se requiere un usuario y contraseña'
         })
     }
-});
-
-app.get('/user/', (req, res, next) => {
-    pool.query('Select * from Usuarios', function(err, result, fields) {
-        if (err) {
-            res.send(err).status(400);
-            return;
-        }
-        res.send(result);
-    });
 });
 
 app.listen(PORT, function(req, res) {

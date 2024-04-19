@@ -30,7 +30,7 @@ routerDispositivo.get('/:id', (req, res) => {
         LEFT JOIN Electrovalvulas AS e ON e.electrovalvulaId = d.electrovalvulaId
         WHERE d.dispositivoId = ${req.params.id};
     `;
-    pool.query(getDispositivoQuery, (err, result, fields) => {
+    pool.query(getDispositivoQuery, (err, result, _) => {
         if (err) {
             res.send(err).status(400);
             return;

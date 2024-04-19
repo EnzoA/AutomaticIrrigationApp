@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Dispositivo } from '../models/Dispositivo';
 import { DispositivoService } from '../services/dispositivo.service';
-import { take } from 'rxjs';
+import { take, tap } from 'rxjs';
 import * as Highcharts from 'highcharts';
 import { Chart } from 'highcharts';
+import { ElectrovalvulaService } from '../services/electrovalvula.service';
 declare var require: any;
 require('highcharts/highcharts-more')(Highcharts);
 require('highcharts/modules/solid-gauge')(Highcharts);
@@ -20,7 +21,10 @@ export class DispositivoPage implements OnInit {
   private _myChart?: Chart;
   dispositivo?: Dispositivo;
 
-  constructor(private _router: ActivatedRoute, private _dispositivoService: DispositivoService) { }
+  constructor(
+    private _router: ActivatedRoute,
+    private _dispositivoService: DispositivoService,
+    private _electrovalvulaService: ElectrovalvulaService) { }
 
   ngOnInit() {
     const idParam = this._router.snapshot.paramMap.get('id');
@@ -31,9 +35,23 @@ export class DispositivoPage implements OnInit {
   }
 
   abrirElectrovalvula() {
+    if (this.dispositivo) {
+      const abierta = true;
+      this._electrovalvulaService.cambiarEstadoElectrovalvula(this.dispositivo.electrovalvulaId, abierta).pipe(
+        take(1),
+        tap(abierta => this.dispositivo!.electrovalvulaAbierta = abierta)
+      ).subscribe();
+    }
   }
 
   cerrarElectrovalvula() {
+    if (this.dispositivo) {
+      const abierta = false;
+      this._electrovalvulaService.cambiarEstadoElectrovalvula(this.dispositivo.electrovalvulaId, abierta).pipe(
+        take(1),
+        tap(abierta => this.dispositivo!.electrovalvulaAbierta = abierta)
+      ).subscribe();
+    }
   }
 
   ionViewDidEnter() {
