@@ -57,20 +57,21 @@ INSERT INTO `Dispositivos` (`dispositivoId`, `nombre`, `ubicacion`, `electrovalv
 
 CREATE TABLE `Electrovalvulas` (
   `electrovalvulaId` int(11) NOT NULL,
-  `nombre` varchar(45) DEFAULT NULL
+  `nombre` varchar(45) DEFAULT NULL,
+  `abierta` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `Electrovalvulas`
 --
 
-INSERT INTO `Electrovalvulas` (`electrovalvulaId`, `nombre`) VALUES
-(1, 'eLPatio'),
-(2, 'eLCocina'),
-(3, 'eLJardinDelantero'),
-(4, 'eLLiving'),
-(5, 'eLHabitacion1'),
-(6, 'eLHabitacion2');
+INSERT INTO `Electrovalvulas` (`electrovalvulaId`, `nombre`, `abierta`) VALUES
+(1, 'eLPatio', 0),
+(2, 'eLCocina', 0),
+(3, 'eLJardinDelantero', 0),
+(4, 'eLLiving', 0),
+(5, 'eLHabitacion1', 1),
+(6, 'eLHabitacion2', 0);
 
 -- --------------------------------------------------------
 

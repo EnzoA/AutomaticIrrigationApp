@@ -4,4 +4,5 @@ export interface Dispositivo {
   ubicacion?: string;
   electrovalvulaId: number;
   ultimaMedicion?: number;
+  electrovalvulaAbierta: boolean;
 }

@@ -30,6 +30,12 @@ export class DispositivoPage implements OnInit {
     ).subscribe(dispositivo => (this.dispositivo = dispositivo));
   }
 
+  abrirElectrovalvula() {
+  }
+
+  cerrarElectrovalvula() {
+  }
+
   ionViewDidEnter() {
     this._generarChart();
   }

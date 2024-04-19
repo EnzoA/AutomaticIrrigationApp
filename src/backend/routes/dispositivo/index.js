@@ -17,7 +17,8 @@ routerDispositivo.get('/:id', (req, res) => {
     const getDispositivoQuery = `
         SELECT
         d.*,
-        m.valor
+        m.valor,
+        e.abierta
         FROM Dispositivos AS d
         LEFT JOIN (
             SELECT m.dispositivoId, m.valor
@@ -26,6 +27,7 @@ routerDispositivo.get('/:id', (req, res) => {
             ORDER BY m.fecha DESC
             LIMIT 1
         ) AS m ON d.dispositivoId = m.dispositivoId
+        LEFT JOIN Electrovalvulas AS e ON e.electrovalvulaId = d.electrovalvulaId
         WHERE d.dispositivoId = ${req.params.id};
     `;
     pool.query(getDispositivoQuery, (err, result, fields) => {
@@ -39,7 +41,8 @@ routerDispositivo.get('/:id', (req, res) => {
             nombre: dispositivo.nombre,
             ubicacion: dispositivo.ubicacion,
             electrovalvulaId: dispositivo.electrovalvulaId,
-            ultimaMedicion: dispositivo.valor
+            ultimaMedicion: dispositivo.valor,
+            electrovalvulaAbierta: dispositivo.abierta === 1,
         });
     });
 });
