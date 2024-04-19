@@ -10,7 +10,6 @@ const configMysql = {
 };
 
 const pool = mysql.createPool(configMysql);
-console.log('THE POOL IS ', pool);
 
 pool.getConnection((err, connection) => {
     if (err) {

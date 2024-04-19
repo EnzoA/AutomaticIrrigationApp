@@ -2,10 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Dispositivo } from '../models/Dispositivo';
 import { DispositivoService } from '../services/dispositivo.service';
-import { take, tap } from 'rxjs';
+import { forkJoin, take, tap } from 'rxjs';
 import * as Highcharts from 'highcharts';
 import { Chart } from 'highcharts';
 import { ElectrovalvulaService } from '../services/electrovalvula.service';
+import { LogRiegoService } from '../services/logRiego.service';
+import { LogRiego } from '../models/LogRiego';
 declare var require: any;
 require('highcharts/highcharts-more')(Highcharts);
 require('highcharts/modules/solid-gauge')(Highcharts);
@@ -24,7 +26,8 @@ export class DispositivoPage implements OnInit {
   constructor(
     private _router: ActivatedRoute,
     private _dispositivoService: DispositivoService,
-    private _electrovalvulaService: ElectrovalvulaService) { }
+    private _electrovalvulaService: ElectrovalvulaService,
+    private _logRiegoService: LogRiegoService) { }
 
   ngOnInit() {
     const idParam = this._router.snapshot.paramMap.get('id');
@@ -35,23 +38,11 @@ export class DispositivoPage implements OnInit {
   }
 
   abrirElectrovalvula() {
-    if (this.dispositivo) {
-      const abierta = true;
-      this._electrovalvulaService.cambiarEstadoElectrovalvula(this.dispositivo.electrovalvulaId, abierta).pipe(
-        take(1),
-        tap(abierta => this.dispositivo!.electrovalvulaAbierta = abierta)
-      ).subscribe();
-    }
+    this._cambiarEstadoElectrovalvula(true);
   }
 
   cerrarElectrovalvula() {
-    if (this.dispositivo) {
-      const abierta = false;
-      this._electrovalvulaService.cambiarEstadoElectrovalvula(this.dispositivo.electrovalvulaId, abierta).pipe(
-        take(1),
-        tap(abierta => this.dispositivo!.electrovalvulaAbierta = abierta)
-      ).subscribe();
-    }
+    this._cambiarEstadoElectrovalvula(false);
   }
 
   ionViewDidEnter() {
@@ -62,6 +53,24 @@ export class DispositivoPage implements OnInit {
     if (this._myChart) {
         this._myChart.destroy();
         this._myChart = undefined;
+    }
+  }
+
+  private _cambiarEstadoElectrovalvula(abierta: boolean) {
+    // TODO: Este approach carece de atomicidad y consistencia.
+    // Se debería reemplazar por un custom endpoint que haga todos los inserts/updates en una transacción.
+    if (this.dispositivo) {
+      forkJoin([
+        this._electrovalvulaService.cambiarEstadoElectrovalvula(this.dispositivo.electrovalvulaId, abierta),
+        this._logRiegoService.crearLogRiego(<LogRiego>{
+          abierta: abierta,
+          fecha: new Date(),
+          electrovalvulaId: this.dispositivo!.electrovalvulaId,
+        })
+      ]).pipe(
+        take(1),
+        tap(([abierta, _]) => this.dispositivo!.electrovalvulaAbierta = abierta)
+      ).subscribe();
     }
   }
 
