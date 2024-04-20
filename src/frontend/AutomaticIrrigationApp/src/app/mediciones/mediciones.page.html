@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
       <ion-buttons slot="start">
-          <ion-button routerLink="'/dispositivo/' + {{dispositivoId}}">
+          <ion-button [routerLink]="'/dispositivo/' + dispositivoId">
               <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
           </ion-button>
       </ion-buttons>
@@ -10,9 +10,22 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-<ion-header collapse="condense">
-  <ion-toolbar>
-      <ion-title size="large">Mediciones</ion-title>
-  </ion-toolbar>
-</ion-header>
+  <ion-header collapse="condense">
+    <ion-toolbar>
+        <ion-title size="large">Mediciones</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-grid>
+    <ion-row class="table-header">
+      <ion-col style="border-right: 1px solid #000000;color: white;" size="2">Nro.</ion-col>
+      <ion-col style="border-right: 1px solid #000000;color: white;" size="3">Valor</ion-col>
+      <ion-col style="color: white;" size="5">Fecha y hora</ion-col>
+    </ion-row>
+    <ion-row *ngFor="let medicion of mediciones$ | async">
+      <ion-col size="2">{{medicion.medicionId}}</ion-col>
+      <ion-col size="3">{{medicion.valor}}</ion-col>
+      <ion-col size="5">{{medicion.fecha | date:'d/M/yy, h:mm a'}}</ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
