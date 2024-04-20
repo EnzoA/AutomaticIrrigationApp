@@ -51,18 +51,15 @@ export class DispositivoPage implements OnInit, OnDestroy {
         this.dispositivo!.ultimaMedicion = this._getMedicionActualizada(
           this.dispositivo!.ultimaMedicion || 0, this.dispositivo!.electrovalvulaAbierta
         );
-        return this._medicionService.actualizarMedicion(this.dispositivo!.dispositivoId, this.dispositivo!.ultimaMedicion, new Date());
+        return this._medicionService.actualizarMedicion(
+          this.dispositivo!.dispositivoId,
+          this.dispositivo!.ultimaMedicion, new Date()
+        );
       }),
-      tap(() => {
-        this.dispositivo!.ultimaMedicion = this._getMedicionActualizada(this.dispositivo!.ultimaMedicion!, this.dispositivo!.electrovalvulaAbierta);
-          this._chartOptions = {
-            ...this._chartOptions,
-            series: [{
-              ...this._chartOptions[0],
-              data: [this.dispositivo ? parseFloat(this.dispositivo!.ultimaMedicion.toFixed(2)) : 0.0],
-            }]
-          };
-          this._myChart?.update(this._chartOptions);
+      tap(_ => {
+        const { ultimaMedicion, electrovalvulaAbierta } = this.dispositivo!;
+        this.dispositivo!.ultimaMedicion = this._getMedicionActualizada(ultimaMedicion!, electrovalvulaAbierta);
+        this._actualizarChart(ultimaMedicion!);
       })
     ).subscribe();
   }
@@ -180,6 +177,17 @@ export class DispositivoPage implements OnInit, OnDestroy {
     };
 
     this._myChart = Highcharts.chart('highcharts', this._chartOptions);
+  }
+
+  private _actualizarChart(ultimaMedicion: number) {
+    this._chartOptions = {
+      ...this._chartOptions,
+      series: [{
+        ...this._chartOptions[0],
+        data: [this.dispositivo ? parseFloat(ultimaMedicion.toFixed(2)) : 0.0],
+      }]
+    };
+    this._myChart?.update(this._chartOptions);
   }
 
   private _getMedicionActualizada(ultimaMedicion: number, valvulaAbierta: boolean): number {
