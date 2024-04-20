@@ -1,8 +1,21 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
+    <div class="title-container">
       <ion-title>
           Home
       </ion-title>
+      <ion-buttons slot="end">
+        <ion-button
+          (click)="logout()"
+          routerLink="/login"
+          fill="solid"
+          class="ios button button-solid in-toolbar in-buttons ion-activatable ion-focusable hydrated"
+        >
+          <ion-icon name="person-circle" role="img" slot="start" class="ios hydrated"></ion-icon>
+           Logout
+        </ion-button>
+      </ion-buttons>
+    </div>
   </ion-toolbar>
 </ion-header>
 
@@ -13,7 +26,7 @@
       </ion-toolbar>
   </ion-header>
   <ion-list>
-      <ion-item *ngFor="let dispositivo of dispositivos" routerLink="/dispositivo/{{dispositivo.dispositivoId}}">
+      <ion-item *ngFor="let dispositivo of dispositivos$ | async" routerLink="/dispositivo/{{dispositivo.dispositivoId}}">
           <ion-avatar slot="start">
               <ion-icon size="large" name="thermometer"></ion-icon>
           </ion-avatar>

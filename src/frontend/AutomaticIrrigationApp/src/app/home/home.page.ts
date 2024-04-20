@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { DispositivoService } from '../services/dispositivo.service';
 import { Dispositivo } from '../models/Dispositivo';
-import { take } from 'rxjs';
+import { Observable } from 'rxjs';
+import { LoginService } from '../services/login.service';
 
 @Component({
   selector: 'app-home',
@@ -10,14 +11,17 @@ import { take } from 'rxjs';
 })
 export class HomePage implements OnInit {
 
-  dispositivos: Dispositivo[] = [];
+  dispositivos$?: Observable<Dispositivo[]>;
 
-  constructor(public dispositivoService: DispositivoService) { }
+  constructor(
+    private _dispositivoService: DispositivoService,
+    private _loginService: LoginService) { }
 
   ngOnInit(): void {
-    this.dispositivoService.getDispositivos().pipe(
-      take(1)
-    ).subscribe(dispositivos => (this.dispositivos = dispositivos));
+    this.dispositivos$ = this._dispositivoService.getDispositivos();
   }
 
+  logout() {
+    this._loginService.logout();
+  }
 }

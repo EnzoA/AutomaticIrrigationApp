@@ -29,5 +29,6 @@ export class LoginService {
 
   logout() {
     localStorage.removeItem('token');
+    // TODO: Debería además implementar y llamar acá a logout en la API.
   }
 }
