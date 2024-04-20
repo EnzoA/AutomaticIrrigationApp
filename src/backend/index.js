@@ -5,7 +5,6 @@ const cors = require('cors');
 const express = require('express');
 
 const app = express();
-// const pool = require('./mysql-connector');
 const jwt = require('jsonwebtoken');
 
 const routerDispositivo = require('./routes/dispositivo');
@@ -27,23 +26,23 @@ const authenticator = (req, res, next) => {
     if (autHeader.startsWith('Bearer ')) {
         token = autHeader.split(' ')[1];
     } else {
-        res.status(401).send({ message: 'Se requiere un token de tipo Bearer'});
+        return res.status(401).send({ message: 'A Bearer token is required'});
     }
     jwt.verify(token, YOUR_SECRET_KEY, (err) => {
         if (err) {
-            res.status(403).send({ message: 'Token inválido'});
+            return res.status(403).send({ message: 'Invlid token'});
         }
+        next();
     });
-    next();
 }
 
 app.use(express.json()); 
 app.use(express.static('/home/node/app/static/'));
 app.use(cors(corsOptions));
-app.use('/dispositivos', routerDispositivo);
-app.use('/electrovalvulas', routerElectrovalvula);
-app.use('/logriegos', routerRiegos);
-app.use('/mediciones', routerMediciones);
+app.use('/dispositivos', authenticator, routerDispositivo);
+app.use('/electrovalvulas', authenticator, routerElectrovalvula);
+app.use('/logriegos', authenticator, routerRiegos);
+app.use('/mediciones', authenticator, routerMediciones);
 
 //=======[ Main module code ]==================================================
 

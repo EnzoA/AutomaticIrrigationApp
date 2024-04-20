@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { LoginService } from '../services/login.service';
-import { take } from 'rxjs';
+import { take, tap } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -22,7 +22,12 @@ export class LoginPage {
 
     if (form.valid) {
       this._loginService.login(this.login.username, this.login.password).pipe(
-        take(1)
+        take(1),
+        tap(_ => {
+          this.login = { username: '', password: '' };
+          this.submitted = false;
+          form.resetForm();
+        })
       ).subscribe();
     }
   }
