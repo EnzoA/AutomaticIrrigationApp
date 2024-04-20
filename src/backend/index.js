@@ -10,7 +10,8 @@ const jwt = require('jsonwebtoken');
 
 const routerDispositivo = require('./routes/dispositivo');
 const routerElectrovalvula = require('./routes/electrovalvula');
-const routerRiegos = require('./routes/riego')
+const routerRiegos = require('./routes/riego');
+const routerMediciones = require('./routes/medicion');
 
 const YOUR_SECRET_KEY = 'mi llave';
 const testUser = { username: 'test', password: '1234' };
@@ -42,6 +43,7 @@ app.use(cors(corsOptions));
 app.use('/dispositivos', routerDispositivo);
 app.use('/electrovalvulas', routerElectrovalvula);
 app.use('/logriegos', routerRiegos);
+app.use('/mediciones', routerMediciones);
 
 //=======[ Main module code ]==================================================
 

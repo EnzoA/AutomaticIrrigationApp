@@ -8,6 +8,8 @@ import { Chart } from 'highcharts';
 import { ElectrovalvulaService } from '../services/electrovalvula.service';
 import { LogRiegoService } from '../services/logRiego.service';
 import { LogRiego } from '../models/LogRiego';
+import { MedicionService } from '../services/medicion.service';
+import { Medicion } from '../models/Medicion';
 declare var require: any;
 require('highcharts/highcharts-more')(Highcharts);
 require('highcharts/modules/solid-gauge')(Highcharts);
@@ -27,7 +29,8 @@ export class DispositivoPage implements OnInit {
     private _router: ActivatedRoute,
     private _dispositivoService: DispositivoService,
     private _electrovalvulaService: ElectrovalvulaService,
-    private _logRiegoService: LogRiegoService) { }
+    private _logRiegoService: LogRiegoService,
+    private _medicionService: MedicionService) { }
 
   ngOnInit() {
     const idParam = this._router.snapshot.paramMap.get('id');
@@ -57,7 +60,7 @@ export class DispositivoPage implements OnInit {
   }
 
   private _cambiarEstadoElectrovalvula(abierta: boolean) {
-    // TODO: Este approach carece de atomicidad y consistencia.
+    // TODO: Este approach carece de atomicidad y de consistencia.
     // Se debería reemplazar por un custom endpoint que haga todos los inserts/updates en una transacción.
     if (this.dispositivo) {
       forkJoin([
@@ -66,10 +69,32 @@ export class DispositivoPage implements OnInit {
           abierta: abierta,
           fecha: new Date(),
           electrovalvulaId: this.dispositivo!.electrovalvulaId,
+        }),
+        // De acuerdo con lo solicidado en la consigna, sólo se hace el insert de una nueva medición
+        // cuando la electroválvula es cerrada.
+        abierta
+        ? this._medicionService.actualizarMedicion(
+          this.dispositivo!.dispositivoId,
+          this._getMedicionActualizada(this.dispositivo!.ultimaMedicion!, abierta))
+        : this._medicionService.crearMedicion(<Medicion>{
+          dispositivoId: this.dispositivo!.dispositivoId,
+          fecha: new Date(),
+          valor: this._getMedicionActualizada(this.dispositivo!.ultimaMedicion!, abierta),
         })
       ]).pipe(
         take(1),
-        tap(([abierta, _]) => this.dispositivo!.electrovalvulaAbierta = abierta)
+        tap(([abierta, _]) => {
+          this.dispositivo!.electrovalvulaAbierta = abierta;
+          this.dispositivo!.ultimaMedicion = this._getMedicionActualizada(this.dispositivo!.ultimaMedicion!, abierta);
+          this._chartOptions = {
+            ...this._chartOptions,
+            series: [{
+              ...this._chartOptions[0],
+              data: [this.dispositivo?.ultimaMedicion],
+            }]
+          };
+          this._myChart!.update(this._chartOptions);
+        })
       ).subscribe();
     }
   }
@@ -134,5 +159,12 @@ export class DispositivoPage implements OnInit {
     };
 
     this._myChart = Highcharts.chart('highcharts', this._chartOptions);
+  }
+
+  // Simula un cambio en la medición asociada a la electroválvula en función de si ésta fue abierta o cerrada.
+  private _getMedicionActualizada(ultimaMedicion: number, valvulaAbierta: boolean): number {
+    return valvulaAbierta
+    ? (ultimaMedicion ? Math.max(ultimaMedicion - 5, 0) : 0)
+    : (ultimaMedicion ? Math.min(ultimaMedicion + 5, 100) : 5);
   }
 }
