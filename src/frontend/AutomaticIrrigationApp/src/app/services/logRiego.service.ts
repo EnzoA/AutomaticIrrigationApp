@@ -9,11 +9,17 @@ import { LogRiego } from '../models/LogRiego';
 })
 export class LogRiegoService {
 
+  private _baseUrl = `${environment.apiBaseUrl}/logriegos`;
+
 	constructor(private _http: HttpClient) { }
+
+  getLogsRiegosDeElectrovalvula(electrovalvulaId: number): Observable<LogRiego[]> {
+    return this._http.get<LogRiego[]>(`${this._baseUrl}?electrovalvulaId=${electrovalvulaId}`);
+  }
 
 	crearLogRiego(logRiego: LogRiego): Observable<any> {
     const fechaISO = logRiego.fecha.toISOString();
     const fecha = `${fechaISO.slice(0, 10)} ${fechaISO.slice(11, 19)}`;
-		return this._http.post(`${environment.apiBaseUrl}/logriegos/`, ({ ...logRiego, fecha }));
+		return this._http.post(this._baseUrl, ({ ...logRiego, fecha }));
 	}
 }

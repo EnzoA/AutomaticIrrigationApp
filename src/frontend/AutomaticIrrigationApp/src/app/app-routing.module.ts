@@ -24,6 +24,11 @@ const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    path: 'riegos/:dispositivoId/:electrovalvulaId',
+    loadChildren: () => import('./riegos/riegos.module').then(m => m.RiegosPageModule),
+    canActivate: [authGuard],
+  },
+  {
     path: '**',
     redirectTo: 'login',
     pathMatch: 'full',
@@ -35,6 +40,10 @@ const routes: Routes = [
   {
     path: 'mediciones',
     loadChildren: () => import('./mediciones/mediciones.module').then( m => m.MedicionesPageModule)
+  },
+  {
+    path: 'riegos',
+    loadChildren: () => import('./riegos/riegos.module').then( m => m.RiegosPageModule)
   },
 ];
 
