@@ -5,7 +5,12 @@
                 <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
             </ion-button>
         </ion-buttons>
-        <ion-title>{{dispositivo?.nombre || '-'}}</ion-title>
+        <ion-title>
+          <div class="title-container">
+            <div>{{dispositivo?.nombre || '-'}}</div>
+            <div [estado]="dispositivo?.electrovalvulaAbierta || false" class="circle-shape"></div>
+          </div>
+        </ion-title>
     </ion-toolbar>
 </ion-header>
 
