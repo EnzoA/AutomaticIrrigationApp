@@ -33,7 +33,7 @@ export class DispositivoPage implements OnInit {
     private _medicionService: MedicionService) { }
 
   ngOnInit() {
-    const idParam = this._router.snapshot.paramMap.get('id');
+    const idParam = this._router.snapshot.paramMap.get('dispositivoId');
     const dispositivoId = idParam ? parseInt(idParam, 10) : -1;
     this._dispositivoService.getDispositivo(dispositivoId).pipe(
       take(1)

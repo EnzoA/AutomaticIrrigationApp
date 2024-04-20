@@ -3,6 +3,23 @@ const pool = require('../../mysql-connector');
 
 const routerMediciones = express.Router();
 
+routerMediciones.get('/', (req, res) => {
+    const getMedicionesDeDispositivoQuery = `
+        SELECT
+        *
+        FROM Mediciones AS m
+        WHERE m.dispositivoId = ${req.query.dispositivoId};
+    `;
+
+    pool.query(getMedicionesDeDispositivoQuery, (err, result, _) => {
+        if (err) {
+            res.send(err).status(400);
+            return;
+        }
+        res.send(result);
+    });
+});
+
 routerMediciones.post('/', (req, res) => {
     const fecha = req.body.fecha;
     const valor = req.body.valor < 0 ? 0 : Math.min(req.body.valor, 100);

@@ -14,8 +14,13 @@ const routes: Routes = [
     pathMatch: 'full',
   },
   {
-    path: 'dispositivo/:id',
+    path: 'dispositivo/:dispositivoId',
     loadChildren: () => import('./dispositivo/dispositivo.module').then(m => m.DispositivoPageModule),
+    canActivate: [authGuard],
+  },
+  {
+    path: 'mediciones/:dispositivoId',
+    loadChildren: () => import('./mediciones/mediciones.module').then(m => m.MedicionesPageModule),
     canActivate: [authGuard],
   },
   {
@@ -26,6 +31,10 @@ const routes: Routes = [
   {
     path: 'login',
     loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
+  },
+  {
+    path: 'mediciones',
+    loadChildren: () => import('./mediciones/mediciones.module').then( m => m.MedicionesPageModule)
   },
 ];
 
