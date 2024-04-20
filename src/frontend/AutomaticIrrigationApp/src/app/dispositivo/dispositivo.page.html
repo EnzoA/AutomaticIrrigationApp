@@ -1,7 +1,7 @@
 <ion-header>
     <ion-toolbar>
         <ion-buttons slot="start">
-            <ion-button routerLink="/home">
+            <ion-button routerLink="/home" [replaceUrl]="true">
                 <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
             </ion-button>
         </ion-buttons>
@@ -40,6 +40,7 @@
   <div class="container">
     <ion-button
       routerLink="/mediciones/{{dispositivo?.dispositivoId}}"
+      [replaceUrl]="true"
       shape="round"
       fill="outline"
       class="dispositivo-button"
@@ -48,6 +49,7 @@
   <div class="container">
     <ion-button
       routerLink="/riegos/{{dispositivo?.dispositivoId}}/{{dispositivo?.electrovalvulaId}}"
+      [replaceUrl]="true"
       shape="round"
       fill="outline"
       class="dispositivo-button"

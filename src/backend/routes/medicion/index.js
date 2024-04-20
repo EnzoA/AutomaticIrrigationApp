@@ -45,8 +45,17 @@ routerMediciones.post('/', (req, res) => {
 routerMediciones.post('/actualizarUltimaMedicionDeDispositivo', (req, res) => {
     const updateMedicionQuery = `
         UPDATE Mediciones SET
+        fecha = '${req.body.fecha}',
         valor = ${req.body.valor}
-        WHERE dispositivoId = ${req.body.dispositivoId};
+        WHERE dispositivoId = ${req.body.dispositivoId}
+            AND fecha >= (
+                SELECT fecha 
+                FROM (
+                    SELECT MAX(fecha) as fecha 
+                    FROM Mediciones 
+                    WHERE dispositivoId = ${req.body.dispositivoId}
+                ) as subquery
+        );
     `;
 
     pool.query(updateMedicionQuery, (err, _) => {

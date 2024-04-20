@@ -8,6 +8,7 @@
         <ion-button
           (click)="logout()"
           routerLink="/login"
+          [replaceUrl]="true"
           fill="solid"
           class="ios button button-solid in-toolbar in-buttons ion-activatable ion-focusable hydrated"
         >
@@ -26,7 +27,10 @@
       </ion-toolbar>
   </ion-header>
   <ion-list>
-      <ion-item *ngFor="let dispositivo of dispositivos$ | async" routerLink="/dispositivo/{{dispositivo.dispositivoId}}">
+      <ion-item
+        *ngFor="let dispositivo of dispositivos$ | async"
+        routerLink="/dispositivo/{{dispositivo.dispositivoId}}"
+        [replaceUrl]="true">
           <ion-avatar slot="start">
               <ion-icon size="large" name="thermometer"></ion-icon>
           </ion-avatar>

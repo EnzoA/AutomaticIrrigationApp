@@ -23,9 +23,12 @@ export class MedicionService {
 		return this._http.post(this._baseUrl, ({ ...medicion, fecha }));
 	}
 
-  actualizarMedicion(dispositivoId: number, nuevoValor: number): Observable<any> {
+  actualizarMedicion(dispositivoId: number, nuevoValor: number, fecha: Date): Observable<any> {
+    const fechaISO = fecha.toISOString();
+    const fechaApi = `${fechaISO.slice(0, 10)} ${fechaISO.slice(11, 19)}`;
     return this._http.post(`${this._baseUrl}/actualizarUltimaMedicionDeDispositivo`, ({
       dispositivoId,
+      fecha: fechaApi,
       valor: nuevoValor,
     }));
   }
